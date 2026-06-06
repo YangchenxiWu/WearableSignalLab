@@ -1,0 +1,32 @@
+{
+  "hr_max": 190.0,
+  "hr_rest": 60,
+  "hr_zone_method": "percent_hrmax",
+  "hr_zones": {
+    "zone1": [
+      0.5,
+      0.6
+    ],
+    "zone2": [
+      0.6,
+      0.7
+    ],
+    "zone3": [
+      0.7,
+      0.8
+    ],
+    "zone4": [
+      0.8,
+      0.9
+    ],
+    "zone5": [
+      0.9,
+      1.0
+    ]
+  },
+  "rolling_window_seconds": 30,
+  "recovery_window_seconds": 60,
+  "speed_smoothing_seconds": 10,
+  "lag_correlation_max_seconds": 60,
+  "lag_correlation_step_seconds": 5
+}

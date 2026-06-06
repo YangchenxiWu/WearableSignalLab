@@ -72,6 +72,11 @@ formats. Those route files may contain identifiable GPS coordinates and are not
 committed. The Polar sample in this repository does not contain raw IMU, raw
 ECG, raw accelerometer, or GPS coordinate data.
 
+Polar field-session diagnostics are controlled by
+`config/polar_config.yaml`, including HR-zone boundaries, HRmax, HRrest,
+rolling-window length, recovery-window length, speed smoothing, and lagged
+correlation settings.
+
 ## Pipeline
 
 1. Download and prepare UCI HAR data.
@@ -125,10 +130,13 @@ figures/feature_distribution_by_activity.png
 figures/confusion_matrix.png
 outputs/polar_session_summary.csv
 outputs/polar_session_metrics.json
+outputs/polar_config_used.json
+outputs/polar_hr_speed_lag_correlation.csv
 figures/polar_hr_timeseries.png
 figures/polar_training_zones.png
 figures/polar_speed_timeseries.png
 figures/polar_hr_speed_relationship.png
+figures/polar_hr_speed_lag_correlation.png
 ```
 
 ## Example Outputs
@@ -140,7 +148,7 @@ The repository generates:
 - Feature distribution by activity figure.
 - Confusion matrix for the baseline classifier.
 - Polar heart-rate time series and HR-zone figures.
-- Polar speed and HR-speed relationship figures when speed is available.
+- Polar HR recovery and HR-speed coupling diagnostics when fields are available.
 - CSV, JSON, and text outputs under `outputs/`.
 
 ## Visual Summary
@@ -151,41 +159,63 @@ The repository generates:
 
 ![Polar heart-rate time series](figures/polar_hr_timeseries.png)
 
-## v0.1.1 Polar Field-Session Extension
+## v0.1.2 Configured Field Diagnostics
 
-This extension demonstrates a reproducible field-session processing workflow
-for wearable-derived heart-rate and GNSS training data. It processes a
-self-collected Polar field-training session and links the repository's
-wearable-signal workflow to a real sport-training context.
+This module demonstrates a reproducible field-session diagnostic workflow for
+wearable-derived heart-rate and optional GNSS training data. It is designed to
+support exploratory internal-external load-response analysis, including
+HR-zone distribution, rolling HR trends, HR recovery after peak effort, and
+optional HR-speed coupling diagnostics when GNSS-derived speed is available.
 
-The current committed Polar sample is used for heart-rate and session
-diagnostics. It includes elapsed time, heart rate, speed, and distance. Speed
-and distance are treated as Polar-derived training-session fields, not as raw
-IMU measurements. The local Polar GPX/TCX exports contain route coordinates,
-but those files are privacy-sensitive and are not committed.
+Research use case:
 
-The Polar extension does not claim raw IMU, raw ECG, or raw accelerometer
-processing. It only processes those modalities if future exported files include
-such fields explicitly.
+Can heart-rate recovery and HR-speed coupling provide interpretable markers of
+internal-external load response in field-based training sessions?
+
+This is a compact technical proof-of-work for configuration-based reproducible
+analysis. It does not claim physiological validation, fatigue diagnosis,
+overtraining detection, or causal inference.
+
+The current committed Polar sample includes elapsed time, heart rate, speed,
+and distance. Speed and distance are treated as Polar-derived training-session
+fields, not as raw IMU measurements. The local Polar GPX/TCX exports contain
+route coordinates, but those files are privacy-sensitive and are not committed.
+
+Configuration-based reproducible analysis:
+
+- HR-zone boundaries, HRmax, HRrest, rolling-window length,
+  recovery-window length, speed smoothing, and lag-correlation settings are
+  controlled through `config/polar_config.yaml`.
+- The script writes `outputs/polar_config_used.json` so each run records the
+  analysis parameters used to generate the metrics.
+- HR zones currently support `percent_hrmax` and `percent_hrr` methods.
 
 The script computes:
 
 - Duration, mean HR, max HR, min HR, HR standard deviation, missing HR count,
-  and time in HR zones.
-- A rolling heart-rate visualization and HR-zone distribution.
+  and time in configured HR zones.
+- Rolling HR trends using the configured rolling window.
+- HR recovery after peak HR, including peak HR, HR after the configured
+  recovery window, recovery in bpm, and recovery slope.
 - Total distance, mean speed, max speed, and speed time-series diagnostics when
   speed or distance fields are available.
-- A simple HR-speed relationship plot and Pearson correlation when both fields
-  are available. The correlation is descriptive and is not interpreted
-  causally.
+- HR-speed Pearson correlation and lagged correlations from 0 seconds to the
+  configured maximum lag when both HR and speed are available.
 
-For the committed sample, HR zones use the explicit default `HRmax = 190`
-because private session metadata is not included in the anonymized sample. When
-processing a raw Polar CSV that includes `HR max`, the script uses that metadata
-unless `--hrmax` is provided.
+Lagged correlation is an exploratory diagnostic and does not establish
+causality. The Polar extension does not claim raw IMU, raw ECG, or raw
+accelerometer processing. It only processes those modalities if future exported
+files include such fields explicitly.
 
-The project remains a compact technical proof-of-work, not a publication-grade
-model and not a claim of methodological novelty.
+Limitations:
+
+- The committed Polar extension is a single-session pilot unless more sessions
+  are added.
+- HR zones depend on assumed HRmax/HRrest unless individually calibrated.
+- HR-speed correlation is exploratory and does not imply causality.
+- Polar Flow exports may not contain raw IMU, ECG, or accelerometer data.
+- GPS/location data may be identifiable and should be anonymized or excluded
+  from public commits.
 
 Privacy handling:
 
