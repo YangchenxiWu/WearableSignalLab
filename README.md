@@ -81,6 +81,12 @@ The repository generates:
 - Confusion matrix for the baseline classifier.
 - CSV, JSON, and text outputs under `outputs/`.
 
+## Visual Summary
+
+![Raw vs filtered signal](figures/raw_vs_filtered_signal.png)
+
+![Confusion matrix](figures/confusion_matrix.png)
+
 ## Results Summary
 
 In the current first version, the Random Forest baseline produced:
