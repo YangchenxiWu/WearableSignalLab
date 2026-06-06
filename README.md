@@ -1,17 +1,18 @@
 # WearableSignalLab
 
-WearableSignalLab is a reproducible IMU signal-processing and human activity
-classification pipeline. It demonstrates how accelerometer and gyroscope
-signals can be prepared, filtered, transformed into movement features, and
-evaluated with a transparent machine-learning baseline.
+WearableSignalLab is a reproducible wearable-signal processing repository. It
+combines an IMU signal-window processing and human activity classification
+pipeline with a field-session extension for wearable-derived heart-rate and
+GNSS training data.
 
 ## Why It Matters
 
-Wearable-based movement monitoring often starts with noisy accelerometer and
-gyroscope signals. A credible first step is to show that raw sensor windows can
-be loaded, filtered, summarized with movement features, and evaluated with a
-transparent baseline classifier. This repository keeps that workflow focused
-and reproducible.
+Wearable-based movement monitoring often starts with noisy accelerometer,
+gyroscope, heart-rate, and GNSS-derived training-session signals. A credible
+first step is to show that wearable data can be loaded, filtered, summarized
+with movement or session features, and evaluated with transparent diagnostics.
+This repository keeps that workflow focused and reproducible, then connects it
+to a real sport-training context through a Polar field-session export.
 
 ## Why UCI HAR is Used
 
@@ -57,6 +58,20 @@ ESANN 2013.
 Large raw data files are not committed. Run the preparation script to download
 and extract the dataset into `data/UCI HAR Dataset/`.
 
+The Polar field-session extension uses a coordinate-free sample derived from a
+self-collected Polar Flow / Polar Beat training export. The committed sample is
+stored in `data/polar_sample/polar_session_sample.csv` and includes:
+
+- `elapsed_seconds`
+- `heart_rate_bpm`
+- `speed_kmh`
+- `distance_m`
+
+The original local Polar export also included private route files in GPX/TCX
+formats. Those route files may contain identifiable GPS coordinates and are not
+committed. The Polar sample in this repository does not contain raw IMU, raw
+ECG, raw accelerometer, or GPS coordinate data.
+
 ## Pipeline
 
 1. Download and prepare UCI HAR data.
@@ -86,6 +101,18 @@ python3 scripts/03_train_baseline.py
 python3 scripts/04_make_figures.py
 ```
 
+Run the Polar field-session extension:
+
+```bash
+python3 scripts/05_process_polar_session.py
+```
+
+To process a private local Polar export, pass the file explicitly:
+
+```bash
+python3 scripts/05_process_polar_session.py --input-csv path/to/polar_export.CSV
+```
+
 Expected outputs:
 
 ```text
@@ -96,6 +123,12 @@ figures/raw_vs_filtered_signal.png
 figures/signal_magnitude_or_peak_detection.png
 figures/feature_distribution_by_activity.png
 figures/confusion_matrix.png
+outputs/polar_session_summary.csv
+outputs/polar_session_metrics.json
+figures/polar_hr_timeseries.png
+figures/polar_training_zones.png
+figures/polar_speed_timeseries.png
+figures/polar_hr_speed_relationship.png
 ```
 
 ## Example Outputs
@@ -106,6 +139,8 @@ The repository generates:
 - Accelerometer magnitude and peak detection figure.
 - Feature distribution by activity figure.
 - Confusion matrix for the baseline classifier.
+- Polar heart-rate time series and HR-zone figures.
+- Polar speed and HR-speed relationship figures when speed is available.
 - CSV, JSON, and text outputs under `outputs/`.
 
 ## Visual Summary
@@ -113,6 +148,53 @@ The repository generates:
 ![Raw vs filtered signal](figures/raw_vs_filtered_signal.png)
 
 ![Confusion matrix](figures/confusion_matrix.png)
+
+![Polar heart-rate time series](figures/polar_hr_timeseries.png)
+
+## v0.1.1 Polar Field-Session Extension
+
+This extension demonstrates a reproducible field-session processing workflow
+for wearable-derived heart-rate and GNSS training data. It processes a
+self-collected Polar field-training session and links the repository's
+wearable-signal workflow to a real sport-training context.
+
+The current committed Polar sample is used for heart-rate and session
+diagnostics. It includes elapsed time, heart rate, speed, and distance. Speed
+and distance are treated as Polar-derived training-session fields, not as raw
+IMU measurements. The local Polar GPX/TCX exports contain route coordinates,
+but those files are privacy-sensitive and are not committed.
+
+The Polar extension does not claim raw IMU, raw ECG, or raw accelerometer
+processing. It only processes those modalities if future exported files include
+such fields explicitly.
+
+The script computes:
+
+- Duration, mean HR, max HR, min HR, HR standard deviation, missing HR count,
+  and time in HR zones.
+- A rolling heart-rate visualization and HR-zone distribution.
+- Total distance, mean speed, max speed, and speed time-series diagnostics when
+  speed or distance fields are available.
+- A simple HR-speed relationship plot and Pearson correlation when both fields
+  are available. The correlation is descriptive and is not interpreted
+  causally.
+
+For the committed sample, HR zones use the explicit default `HRmax = 190`
+because private session metadata is not included in the anonymized sample. When
+processing a raw Polar CSV that includes `HR max`, the script uses that metadata
+unless `--hrmax` is provided.
+
+The project remains a compact technical proof-of-work, not a publication-grade
+model and not a claim of methodological novelty.
+
+Privacy handling:
+
+- Raw Polar exports may contain identifiable location data.
+- Root-level private Polar exports are ignored by `.gitignore`.
+- The committed sample strips coordinates and keeps only derived time-series
+  diagnostics.
+- Optional GPX parsing uses coordinates only to derive distance, speed, and
+  elevation summaries; coordinates are not written to output files by default.
 
 ## Results Summary
 

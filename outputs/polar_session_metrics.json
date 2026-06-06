@@ -1,0 +1,38 @@
+{
+  "duration_seconds": 2837.0,
+  "duration_minutes": 47.28333333333333,
+  "sample_count": 2838,
+  "hrmax_bpm_used_for_zones": 190,
+  "missing_timestamp_count": 0,
+  "available_fields": [
+    "elapsed_seconds",
+    "heart_rate_bpm",
+    "speed_kmh",
+    "distance_m"
+  ],
+  "polar_export_note": "Processed wearable-derived heart-rate and GNSS/session fields; no raw IMU, raw ECG, or raw accelerometer data is claimed.",
+  "mean_hr_bpm": 134.28889674681753,
+  "max_hr_bpm": 179.0,
+  "min_hr_bpm": 76.0,
+  "std_hr_bpm": 21.524617337453968,
+  "missing_hr_count": 10,
+  "hr_zone_seconds": {
+    "below_z1": 155.0,
+    "z1_50_60": 243.0,
+    "z2_60_70": 861.0,
+    "z3_70_80": 1045.0,
+    "z4_80_90": 372.0,
+    "z5_90_100": 152.0,
+    "above_z5": 0.0
+  },
+  "total_distance_m": 2782.44,
+  "mean_speed_kmh": 2.7387949260042284,
+  "max_speed_kmh": 21.7,
+  "hr_speed_pearson_correlation": 0.33850802152430287,
+  "source_fields_detected": [
+    "elapsed_seconds",
+    "heart_rate_bpm",
+    "speed_kmh",
+    "distance_m"
+  ]
+}

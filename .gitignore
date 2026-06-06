@@ -10,3 +10,8 @@ data/UCI HAR Dataset/
 data/__MACOSX/
 data/*.zip
 data/*.names
+
+# Private Polar exports may include names and identifiable GPS routes.
+/*.CSV
+/*.GPX
+/*.TCX
