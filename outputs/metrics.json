@@ -1,0 +1,16 @@
+{
+  "classifier": "RandomForestClassifier",
+  "accuracy": 0.9009161859518154,
+  "macro_f1": 0.8979667201997428,
+  "n_train": 7352,
+  "n_test": 2947,
+  "n_features": 74,
+  "labels": [
+    "LAYING",
+    "SITTING",
+    "STANDING",
+    "WALKING",
+    "WALKING_DOWNSTAIRS",
+    "WALKING_UPSTAIRS"
+  ]
+}

@@ -1,0 +1,12 @@
+.venv/
+.cache/
+.mplconfig/
+__pycache__/
+*.py[cod]
+.DS_Store
+
+# Raw public dataset files are downloaded locally, not committed.
+data/UCI HAR Dataset/
+data/__MACOSX/
+data/*.zip
+data/*.names

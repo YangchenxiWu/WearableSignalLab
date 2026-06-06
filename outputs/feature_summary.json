@@ -1,0 +1,16 @@
+{
+  "n_rows": 10299,
+  "n_features": 74,
+  "splits": {
+    "train": 7352,
+    "test": 2947
+  },
+  "activities": [
+    "LAYING",
+    "SITTING",
+    "STANDING",
+    "WALKING",
+    "WALKING_DOWNSTAIRS",
+    "WALKING_UPSTAIRS"
+  ]
+}
